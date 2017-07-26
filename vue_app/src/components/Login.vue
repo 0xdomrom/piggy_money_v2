@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
     <form class="col">
       <div class="col-xs-12 large-text column-stack">
-        <label>Unikey</label>
+        <label>Username</label>
         <input type="text" v-model="username">
       </div>
 

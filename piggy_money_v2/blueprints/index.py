@@ -8,4 +8,4 @@ bp = Blueprint('piggy_money', __name__)
 
 @bp.route("/")
 def index():
-    return "hallo~"
+    return render_template('index.html')

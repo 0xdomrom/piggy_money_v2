@@ -1,7 +1,15 @@
 <template>
   <div class="Login">
     <h1>{{ msg }}</h1>
-    <form class="col">
+    <form class="col" v-on:submit.prevent="test">
+      <transition name="fade">
+        <div v-if="rejected" class="col-xs-12 ">
+          <div class="col-xs-12" id="login-error">
+            Incorrect name or password.
+          </div>
+        </div>
+      </transition>
+
       <div class="col-xs-12 large-text column-stack">
         <label>Username</label>
         <input type="text" v-model="username">
@@ -18,12 +26,13 @@
         <label for="remember-me">Remember me</label>
       </div>
 
+
       <div class="col-xs-12">
         <button class="btn btn-success btn-block" :disabled="username.length == 0 || password.length == 0">
             SUBMIT
         </button>
       </div>
-  </form>
+    </form>
   </div>
 </template>
 
@@ -38,39 +47,46 @@ export default {
       remember_me: true,
       rejected: false,
     }
+  },
+  methods: {
+    test() {
+      alert("hi: "+this.username+"\nyour password is: "+this.password);
+      this.password='';
+      this.rejected=true;
+    }
   }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
+<style>
+
+#login-error {
+  overflow: hidden;
+  padding: 10px;
+  background-color: red;
+  max-height: 3rem;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 2s;
+
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
 }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
 
-a {
-  color: #42b983;
-}
-
-#Login {
+.Login {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  #remember-me {
-      margin-right: 10px;;
-  }
+  max-width: 500px;
+  margin: 0 auto;
 
   input {
     padding: 5px;

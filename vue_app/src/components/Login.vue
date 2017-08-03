@@ -37,7 +37,18 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+axios.get("/api/test")
+.then(response => {
+  console.log(response.data);
+})
+.catch(e => {
+  console.log(e);
+});
+
 export default {
+
   name: 'Login',
   data () {
     return {
@@ -50,7 +61,10 @@ export default {
   },
   methods: {
     test() {
-      alert("hi: "+this.username+"\nyour password is: "+this.password);
+      console.log(this.$router)
+      if (this.username=="Bob" && this.password == "Bob") {
+        this.$router.push('/accounts')
+      }
       this.password='';
       this.rejected=true;
     }

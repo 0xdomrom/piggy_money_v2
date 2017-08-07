@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import Auth from "../auth"
 
 axios.get("/api/test")
 .then(response => {
@@ -52,7 +53,7 @@ export default {
   name: 'Login',
   data () {
     return {
-      msg: 'Welcome to Piggy Money',
+      msg: 'Welcome to Piggy Money2',
       username: '',
       password: '',
       remember_me: true,
@@ -61,16 +62,18 @@ export default {
   },
   methods: {
     test() {
-      console.log(this.$router)
-      if (this.username=="Bob" && this.password == "Bob") {
-        this.$router.push('/accounts')
-      }
-      this.password='';
-      this.rejected=true;
+      Auth.authenticate(this.username, this.password, this.remember_me)
+      .then(response => {
+        console.log(response);
+        this.$router.push("/accounts");
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     }
   }
 }
-
 
 </script>
 

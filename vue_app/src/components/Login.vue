@@ -65,7 +65,11 @@ export default {
       Auth.authenticate(this.username, this.password, this.remember_me)
       .then(response => {
         console.log(response);
-        this.$router.push("/accounts");
+        if (response.data.valid) {
+          this.$router.push("/accounts");
+        } else {
+          this.rejected = true;
+        }
       })
       .catch(err => {
         console.log(err);

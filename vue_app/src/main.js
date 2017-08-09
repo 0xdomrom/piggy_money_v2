@@ -13,3 +13,6 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+
+console.log("%c🤞", "background-color:yellow;border:5px solid black;font-size:3rem;color:white;;border-radius:1000px;padding:10px")

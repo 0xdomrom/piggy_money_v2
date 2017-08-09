@@ -1,40 +1,82 @@
 <template>
   <div class="Accounts">
-    <ul id="account-list">
-      <li v-for="item in accounts">
-        {{ item.account_id }} | {{ item.balance }}
-      </li>
-    </ul>
+    <div v-if="loading">
+      <p>
+        Loading...
+      </p>
+    </div>
+    <div v-if="error">
+      <p>
+        Error...
+      </p>
+    </div>
+    <div v-if="loaded">
+      <p>
+        Hi {{ username }} your accounts are as follows:
+      </p>
+      <ul id="account-list">
+        <li v-for="item in accounts">
+          {{ item[0] }} | {{ item[1] }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
+import Vue from 'vue'
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage)
+
 export default {
   name: 'Accounts',
   data () {
     return {
-      accounts: [
-        {
-          account_id:"1",
-          balance:"1000"
-        },
-        {
-          account_id:"2",
-          balance:"1000"
-        },
-        {
-          account_id:"3",
-          balance:"1000"
-        }
-      ]
+      accounts: null,
+      error: false,
+      loading: true,
+      loaded: true,
+      username: this.$localStorage.get("username")
+    }
+  },
+  localStorage: {
+    user : {
+      username : {
+        type : String
+      },
+      password : {
+        type : String
+      }
     }
   },
   methods: {
-    test() {
-      alert("hi: "+this.username+"\nyour password is: "+this.password);
-      this.password='';
-      this.rejected=true;
+    fetchData() {
+      console.log("fetching accounts for: ");
+      console.log(this.$localStorage.get("username"));
+      axios.post("/api/get_user_accounts/",
+        {"username":this.$localStorage.get('username'), "password":this.$localStorage.get('password')}
+      )
+      .then(response => {
+        console.log(response);
+        this.accounts = response.data.accounts;
+        this.err = false;
+        this.loading = false;
+      })
+      .catch(err => {
+        this.loading = false;
+        this.accounts = null
+        this.err = true;
+      });
     }
+  },
+  watch: {
+    '$route':'fetchData'
+  },
+  created() {
+    this.fetchData()
   }
 }
 </script>

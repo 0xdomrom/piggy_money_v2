@@ -40,9 +40,14 @@
 import axios from 'axios';
 import Auth from "../auth"
 
+import Vue from 'vue'
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage)
+
 axios.get("/api/test")
 .then(response => {
-  console.log(response.data);
+  console.log(response.data.content, response.data.style);
 })
 .catch(e => {
   console.log(e);
@@ -60,12 +65,24 @@ export default {
       rejected: false,
     }
   },
+  localStorage: {
+    user : {
+      username : {
+        type : String
+      },
+      password : {
+        type : String
+      }
+    }
+  },
   methods: {
     test() {
       Auth.authenticate(this.username, this.password, this.remember_me)
       .then(response => {
         console.log(response);
         if (response.data.valid) {
+          this.$localStorage.set('username',this.username);
+          this.$localStorage.set('password',this.password);
           this.$router.push("/accounts");
         } else {
           this.rejected = true;
